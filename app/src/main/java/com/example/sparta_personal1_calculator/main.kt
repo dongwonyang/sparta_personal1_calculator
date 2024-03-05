@@ -12,9 +12,12 @@ fun main(){
             cal.mul()
             cal.div()
             cal.remain()
-            println()
         }catch (e: NumberFormatException) {
             continue
+        }catch (e: ArithmeticException) {
+            continue
+        }finally {
+            println()
         }
     }
 }

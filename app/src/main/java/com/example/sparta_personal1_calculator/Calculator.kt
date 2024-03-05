@@ -1,8 +1,8 @@
 package com.example.sparta_personal1_calculator
 
 class Calculator {
-    private var num1: Int = 0
-    private var num2: Int = 0
+    private var num1: Int
+    private var num2: Int
 
     init {
         num1 = 0
