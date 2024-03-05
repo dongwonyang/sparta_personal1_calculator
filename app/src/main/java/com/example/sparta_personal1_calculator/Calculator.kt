@@ -1,8 +1,8 @@
 package com.example.sparta_personal1_calculator
 
 class Calculator {
-    var num1: Int = 0
-    var num2: Int = 0
+    private var num1: Int = 0
+    private var num2: Int = 0
 
     init {
         num1 = 0
@@ -37,6 +37,10 @@ class Calculator {
     fun input(num1: Int, num2: Int) {
         this.num1 = num1
         this.num2 = num2
+    }
+
+    fun print(){
+        println("num1: ${num1}, num2:${num2}")
     }
 }
 
