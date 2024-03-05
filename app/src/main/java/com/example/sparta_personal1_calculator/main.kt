@@ -1,22 +1,24 @@
 package com.example.sparta_personal1_calculator
 
-fun main(){
+fun main() {
 
-    while(true){
+    while (true) {
         println("두 수를 입력하세요.")
         try {
-            val (a, b) = readLine()!!.split(' ').map(String::toInt)
+            val inputNumbers = readLine()!!.split(' ').map(String::toInt)
+            if (inputNumbers.size < 2) throw NumberFormatException("두개 입력 필요")
+            val (a, b) = inputNumbers
             val cal = Calculator(a, b)
             cal.add()
             cal.sub()
             cal.mul()
             cal.div()
             cal.remain()
-        }catch (e: NumberFormatException) {
+        } catch (e: NumberFormatException) {
             continue
-        }catch (e: ArithmeticException) {
+        } catch (e: ArithmeticException) {
             continue
-        }finally {
+        } finally {
             println()
         }
     }
