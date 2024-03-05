@@ -12,5 +12,15 @@
         android:layout_height="wrap_content"
         android:gravity="right"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        android:textStyle="bold"
+        android:textSize="35sp"
+        android:text="15"
+        android:layout_marginEnd="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/main_calculator_result_tv"
+        android:padding="4dp"/>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
