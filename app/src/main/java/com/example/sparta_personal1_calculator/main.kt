@@ -1,7 +1,6 @@
 package com.example.sparta_personal1_calculator
 
 fun main() {
-
     while (true) {
         println("두 수를 입력하세요.")
         try {
