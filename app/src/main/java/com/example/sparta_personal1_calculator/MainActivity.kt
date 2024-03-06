@@ -14,6 +14,7 @@ class MainActivity : AppCompatActivity() {
         val tv_input = findViewById<TextView>(R.id.tv_calculator_input)
         val tv_result = findViewById<TextView>(R.id.tv_calculator_result)
         tv_result.text = "0"
+        tv_input.text = ""
         var btn_map = mutableMapOf<String, Int>()
 
         for (i in 0..9) {
@@ -32,7 +33,7 @@ class MainActivity : AppCompatActivity() {
         for((key, value) in btn_map.entries){
             if(key != "equal") {
                 findViewById<Button>(value).setOnClickListener {
-                    tv_input.text = tv_input.text.toString() + " " + key
+                    tv_input.text = tv_input.text.toString() + key
                 }
             } else {
                 findViewById<Button>(value).setOnClickListener{

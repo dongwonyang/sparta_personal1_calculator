@@ -73,8 +73,7 @@ class Calculator {
         resultString.removeAt(index * 2 + 1)
         resultString.removeAt(index * 2)
         when (resultString[index * 2]) {
-//            '*', '/' -> 1
-//            '+', '-' -> 2
+
         }
     }
 }
