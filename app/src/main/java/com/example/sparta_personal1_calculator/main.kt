@@ -13,6 +13,9 @@ fun main() {
             cal.mul()
             cal.div()
             cal.remain()
+
+
+            println("${cal.calculateString("7*8+99/9")}")
         } catch (e: NumberFormatException) {
             continue
         } catch (e: ArithmeticException) {

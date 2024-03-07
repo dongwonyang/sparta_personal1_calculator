@@ -5,15 +5,24 @@ import androidx.core.text.isDigitsOnly
 class Calculator {
     private var num1: Int
     private var num2: Int
+    private var signs: MutableList<Char>
+    private var nums: MutableList<Int>
+    private var inputString: String
 
     init {
         num1 = 0
         num2 = 0
+        signs = mutableListOf()
+        nums = mutableListOf()
+        inputString = ""
     }
 
     constructor(num1: Int, num2: Int) {
         this.num1 = num1
         this.num2 = num2
+        signs = mutableListOf<Char>()
+        nums = mutableListOf<Int>()
+        inputString = ""
     }
 
     fun add() {
@@ -45,38 +54,112 @@ class Calculator {
         println("num1: ${num1}, num2:${num2}")
     }
 
-    fun calculateString(s: String) {
-        val numbers = s.split(" ").filter { it.isDigitsOnly() }.map { it.toInt() }.toIntArray()
-        val signs = s.filter { it.isDigit() || it.isWhitespace() }.toCharArray()
-        val tempString = s.split(" ").toMutableList()
-        val signsPriority = calculateProceed(signs)
-        for (i in signs.indices) {
-            if (signsPriority[i] == 2) {
-                //계산
+    fun calculateString(s: String): MutableList<Char> {
+        signs = s.filter { it -> !it.isDigit() }.toMutableList()
+        nums = mutableListOf<Int>()
+        var tempString = ""
+        for (i in s) {
+            if (i.isDigit()) {
+                tempString += i
+            } else if (tempString.isNotEmpty()) {
+                nums.add(tempString.toInt())
+                tempString = ""
             }
         }
+        if (tempString.isNotEmpty()) {
+            nums.add(tempString.toInt())
+        }
+
+        calculateStringPriority()
+
+        return signs
     }
 
-    fun calculateProceed(sings: CharArray): IntArray {
-        val singsPriority = mutableListOf<Int>()
-        for (i in sings) {
-            when (i) {
-                '+', '-' -> singsPriority.add(1)
-                '*', '/' -> singsPriority.add(2)
+
+    private fun calculateStringPriority(){
+        var signsPriority = signs.map { it ->
+            when (it) {
+                '*', 'x', '/' -> 0
+                '+', '-' -> 1
+                else -> throw java.lang.Exception("계산식 오류 $signs, $nums")
+            }
+        }.toMutableList<Int>()
+
+        var end = -1
+        var length = 0
+        for (index in signsPriority.size-1 downTo 0) {
+            val priority = signsPriority[index]
+
+            if (priority == 0 && end == -1) {
+                end = index
+                length++
+            } else if (priority == 0) {
+                length++
+            }
+
+            if((priority != 0 && signsPriority[index + 1] == 0) || index == 0) {
+                calculatePartial(end, length)
+            }
+            if(priority != 0){
+                end = -1
+                length = 0
             }
         }
-        return singsPriority.toIntArray()
+
+
+//        signsPriority = signsPriority.removeAll { it -> it == 0 }
+
+//        for (index in signsPriority.size-1 downTo 0) {
+//            val priority = signsPriority[index]
+//
+//            if (priority == 1 && end == -1) {
+//                end = index
+//                length++
+//            } else if (priority == 0) {
+//                length++
+//            }
+//
+//            if((priority != 0 && signsPriority[index + 1] == 0) || index == 0) {
+//                calculatePartial(end, length)
+//            }
+//            if(priority != 0){
+//                end = -1
+//                length = 0
+//            }
+//        }
+
     }
 
-    fun calculateOperation(resultString: MutableList<String>, index: Int) {
-        resultString.removeAt(index * 2 + 2)
-        resultString.removeAt(index * 2 + 1)
-        resultString.removeAt(index * 2)
-        when (resultString[index * 2]) {
+    private fun calculatePartial(end: Int, length: Int): Int {
 
+        var subNums = nums.subList(end - length + 1, end + 2).toMutableList()
+        var subSigns = signs.subList(end - length + 1, end + 1).toMutableList()
+
+        var result = subNums[0]
+
+        for (i in 1 until subNums.size) {
+            val num = subNums[i]
+            val sign = subSigns[i - 1]
+
+            when (sign) {
+                '*' -> result *= num
+                '/' -> result /= num
+                '+' -> result += num
+                '-' -> result -= num
+            }
         }
+
+        for (i in 0 until length) {
+            signs.removeAt(end - i)
+            nums.removeAt(end + 1 - i)
+        }
+        nums.set(end-length+1, result)
+
+        return result
     }
+
 }
+
 
 interface AbstractOperation {
     fun run(num1: Int, num2: Int)
