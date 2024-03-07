@@ -9,7 +9,7 @@ class Calculator {
     private var nums: MutableList<Int>
     private var inputString: String
 
-    init {
+    constructor() {
         num1 = 0
         num2 = 0
         signs = mutableListOf()
@@ -54,7 +54,7 @@ class Calculator {
         println("num1: ${num1}, num2:${num2}")
     }
 
-    fun calculateString(s: String): MutableList<Int> {
+    fun calculateString(s: String): Int {
         signs = s.filter { it -> !it.isDigit() }.toMutableList()
         nums = mutableListOf<Int>()
         var tempString = ""
@@ -72,11 +72,11 @@ class Calculator {
 
         calculateStringPriority()
 
-        return nums
+        return if (nums.size == 1) nums[0] else 0
     }
 
 
-    private fun calculateStringPriority(){
+    private fun calculateStringPriority() {
         var signsPriority = signs.map { it ->
             when (it) {
                 '*', 'x', '/' -> 0
@@ -87,7 +87,8 @@ class Calculator {
 
         var end = -1
         var length = 0
-        for (index in signsPriority.size-1 downTo 0) {
+
+        for (index in signsPriority.size - 1 downTo 0) {
             val priority = signsPriority[index]
 
             if (priority == 0 && end == -1) {
@@ -97,40 +98,19 @@ class Calculator {
                 length++
             }
 
-            if((priority != 0 && signsPriority[index + 1] == 0) || index == 0) {
+            if ((index < signsPriority.size-1 && priority != 0 && signsPriority[index + 1] == 0) || (index==0 && end != -1)) {
                 calculatePartial(end, length)
                 end = -1
                 length = 0
             }
-            if(priority != 0){
+            if (priority != 0) {
                 end = -1
                 length = 0
             }
         }
 
 
-        signsPriority.removeAll { it -> it == 0 }
-
-        for (index in signsPriority.size-1 downTo 0) {
-            val priority = signsPriority[index]
-
-            if (priority == 1 && end == -1) {
-                end = index
-                length++
-            } else if (priority == 1) {
-                length++
-            }
-
-            if((priority != 1 && signsPriority[index + 1] == 1) || index == 0) {
-                calculatePartial(end, length)
-                end = -1
-                length = 0
-            }
-            if(priority != 1){
-                end = -1
-                length = 0
-            }
-        }
+        calculatePartial(signs.size-1, signs.size)
 
     }
 
@@ -157,7 +137,7 @@ class Calculator {
             signs.removeAt(end - i)
             nums.removeAt(end + 1 - i)
         }
-        nums.set(end-length+1, result)
+        nums.set(end - length + 1, result)
 
         return result
     }

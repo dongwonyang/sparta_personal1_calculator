@@ -15,7 +15,7 @@ fun main() {
             cal.remain()
 
 
-            println("${cal.calculateString("7*8+99/9")}")
+            println("${cal.calculateString("7*8+99/11-6")}")
         } catch (e: NumberFormatException) {
             continue
         } catch (e: ArithmeticException) {

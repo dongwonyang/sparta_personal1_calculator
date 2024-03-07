@@ -31,16 +31,20 @@ class MainActivity : AppCompatActivity() {
         }
 
         for((key, value) in btn_map.entries){
-            if(key != "equal") {
+            if(key != "=") {
                 findViewById<Button>(value).setOnClickListener {
                     tv_input.text = tv_input.text.toString() + key
                 }
-            } else {
+            } else if(key == "="){
                 findViewById<Button>(value).setOnClickListener{
-
+                    tv_result.text = Calculator().calculateString(tv_input.text.toString()).toString()
+                    tv_input.text = ""
                 }
             }
+
         }
 
     }
 }
+
+//taskkill /im java.exe /f
