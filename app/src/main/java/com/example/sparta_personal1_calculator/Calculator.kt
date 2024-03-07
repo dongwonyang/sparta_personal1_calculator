@@ -54,7 +54,7 @@ class Calculator {
         println("num1: ${num1}, num2:${num2}")
     }
 
-    fun calculateString(s: String): MutableList<Char> {
+    fun calculateString(s: String): MutableList<Int> {
         signs = s.filter { it -> !it.isDigit() }.toMutableList()
         nums = mutableListOf<Int>()
         var tempString = ""
@@ -72,7 +72,7 @@ class Calculator {
 
         calculateStringPriority()
 
-        return signs
+        return nums
     }
 
 
@@ -99,6 +99,8 @@ class Calculator {
 
             if((priority != 0 && signsPriority[index + 1] == 0) || index == 0) {
                 calculatePartial(end, length)
+                end = -1
+                length = 0
             }
             if(priority != 0){
                 end = -1
@@ -107,26 +109,28 @@ class Calculator {
         }
 
 
-//        signsPriority = signsPriority.removeAll { it -> it == 0 }
+        signsPriority.removeAll { it -> it == 0 }
 
-//        for (index in signsPriority.size-1 downTo 0) {
-//            val priority = signsPriority[index]
-//
-//            if (priority == 1 && end == -1) {
-//                end = index
-//                length++
-//            } else if (priority == 0) {
-//                length++
-//            }
-//
-//            if((priority != 0 && signsPriority[index + 1] == 0) || index == 0) {
-//                calculatePartial(end, length)
-//            }
-//            if(priority != 0){
-//                end = -1
-//                length = 0
-//            }
-//        }
+        for (index in signsPriority.size-1 downTo 0) {
+            val priority = signsPriority[index]
+
+            if (priority == 1 && end == -1) {
+                end = index
+                length++
+            } else if (priority == 1) {
+                length++
+            }
+
+            if((priority != 1 && signsPriority[index + 1] == 1) || index == 0) {
+                calculatePartial(end, length)
+                end = -1
+                length = 0
+            }
+            if(priority != 1){
+                end = -1
+                length = 0
+            }
+        }
 
     }
 
