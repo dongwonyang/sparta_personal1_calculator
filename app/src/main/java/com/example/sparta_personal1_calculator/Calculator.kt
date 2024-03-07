@@ -63,9 +63,7 @@ class Calculator {
         inputString = inputString.replace("(", "")
         inputString = inputString.replace(")", "")
 
-        negativeGet()
-        inputString = inputString.replace("!", "")
-
+        if(!inputString[0].isDigit()) inputString = "0" + inputString
         signs = inputString.filter { it -> !it.isDigit() }.toMutableList()
         nums = mutableListOf<Int>()
         var tempString = ""
@@ -132,7 +130,6 @@ class Calculator {
     }
 
     private fun calculatePartial(end: Int, length: Int): Int {
-
         var subNums = nums.subList(end - length + 1, end + 2).toMutableList()
         var subSigns = signs.subList(end - length + 1, end + 1).toMutableList()
 
@@ -168,38 +165,12 @@ class Calculator {
 
             var bracketModify = cal.calculateString(inputString.substring(startIndex + 1, endIndex)).toString()
             if(bracketModify.toInt() < 0){
-                bracketModify = "!"+(bracketModify.toInt()*-1).toString()+"!"
+                bracketModify = "0-"+(bracketModify.toInt()*-1).toString()
             }
             inputString = inputString.substring(0, startIndex) + bracketModify + inputString.substring(endIndex+1, inputString.length)
         }
     }
 
-    fun negativeGet(){
-        while(true) {
-            val startIndex = inputString.indexOf('!')
-            val endIndex = inputString.indexOf('!', 1)
-            if (startIndex == -1 || endIndex == -1) break
-
-            var cnt = 0
-            var cntDisit = true
-            for(i in inputString){
-                if(cntDisit){
-                    if(!i.isDigit()){
-                        cntDisit = false
-                    }
-                } else if(!cntDisit){
-                    if(i.isDigit()){
-                        cnt++
-                        cntDisit = true
-                    }
-                }
-            }
-            negativeIndex.add(cnt)
-
-            val modifiedPart = inputString.substring(startIndex + 1, endIndex)
-            inputString = inputString.replaceFirst("!" + modifiedPart + "!", modifiedPart)
-        }
-    }
 }
 
 

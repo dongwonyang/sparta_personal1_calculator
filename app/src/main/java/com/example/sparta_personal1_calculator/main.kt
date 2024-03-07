@@ -18,6 +18,7 @@ fun main() {
             println("${cal.calculateString("(1+2+4)/7*3-(4-3)")}")
             println("${cal.calculateString("(5)")}")
             println("${cal.calculateString("(-6)")}")
+            println("${cal.calculateString("-6")}")
 
         } catch (e: NumberFormatException) {
             continue
