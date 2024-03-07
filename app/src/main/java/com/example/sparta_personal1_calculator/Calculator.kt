@@ -8,12 +8,14 @@ class Calculator {
     private var signs: MutableList<Char>
     private var nums: MutableList<Int>
     private var inputString: String
+    private var negativeIndex : MutableList<Int>
 
     constructor() {
         num1 = 0
         num2 = 0
         signs = mutableListOf()
         nums = mutableListOf()
+        negativeIndex = mutableListOf()
         inputString = ""
     }
 
@@ -22,6 +24,7 @@ class Calculator {
         this.num2 = num2
         signs = mutableListOf<Char>()
         nums = mutableListOf<Int>()
+        negativeIndex = mutableListOf<Int>()
         inputString = ""
     }
 
@@ -54,11 +57,14 @@ class Calculator {
         println("num1: ${num1}, num2:${num2}")
     }
 
-    fun calculateString(s: String): Int? {
+    fun calculateString(s: String): Int {
         inputString = s
-        calculateBracket()
-        inputString.replace("(", "")
-        inputString.replace(")", "")
+        calculateBracket() // ( ) 계산 다중 괄호 불가능..
+        inputString = inputString.replace("(", "")
+        inputString = inputString.replace(")", "")
+
+        negativeGet()
+        inputString = inputString.replace("!", "")
 
         signs = inputString.filter { it -> !it.isDigit() }.toMutableList()
         nums = mutableListOf<Int>()
@@ -73,6 +79,12 @@ class Calculator {
         }
         if (tempString.isNotEmpty()) {
             nums.add(tempString.toInt())
+        }
+
+        if(negativeIndex.isNotEmpty()) {
+            for (i in negativeIndex) {
+                nums[i] *= -1
+            }
         }
 
         if(nums.size -1 != signs.size) return 0
@@ -155,9 +167,38 @@ class Calculator {
             if (startIndex == -1 || endIndex == -1) break
 
             var bracketModify = cal.calculateString(inputString.substring(startIndex + 1, endIndex)).toString()
+            if(bracketModify.toInt() < 0){
+                bracketModify = "!"+(bracketModify.toInt()*-1).toString()+"!"
+            }
             inputString = inputString.substring(0, startIndex) + bracketModify + inputString.substring(endIndex+1, inputString.length)
         }
+    }
 
+    fun negativeGet(){
+        while(true) {
+            val startIndex = inputString.indexOf('!')
+            val endIndex = inputString.indexOf('!', 1)
+            if (startIndex == -1 || endIndex == -1) break
+
+            var cnt = 0
+            var cntDisit = true
+            for(i in inputString){
+                if(cntDisit){
+                    if(!i.isDigit()){
+                        cntDisit = false
+                    }
+                } else if(!cntDisit){
+                    if(i.isDigit()){
+                        cnt++
+                        cntDisit = true
+                    }
+                }
+            }
+            negativeIndex.add(cnt)
+
+            val modifiedPart = inputString.substring(startIndex + 1, endIndex)
+            inputString = inputString.replaceFirst("!" + modifiedPart + "!", modifiedPart)
+        }
     }
 }
 
