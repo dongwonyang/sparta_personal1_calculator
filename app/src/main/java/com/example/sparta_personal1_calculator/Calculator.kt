@@ -126,7 +126,7 @@ class Calculator {
             val sign = subSigns[i - 1]
 
             when (sign) {
-                '*' -> result *= num
+                '*', 'x' -> result *= num
                 '/' -> result /= num
                 '+' -> result += num
                 '-' -> result -= num

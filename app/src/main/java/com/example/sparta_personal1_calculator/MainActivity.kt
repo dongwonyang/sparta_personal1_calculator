@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity() {
             btn_map[buttonText] = buttonId
         }
 
+        val cal = Calculator()
         for((key, value) in btn_map.entries){
             if(key != "=") {
                 findViewById<Button>(value).setOnClickListener {
@@ -37,11 +38,10 @@ class MainActivity : AppCompatActivity() {
                 }
             } else if(key == "="){
                 findViewById<Button>(value).setOnClickListener{
-                    tv_result.text = Calculator().calculateString(tv_input.text.toString()).toString()
+                    tv_result.text = cal.calculateString(tv_input.text.toString()).toString()
                     tv_input.text = ""
                 }
             }
-
         }
 
     }
