@@ -15,7 +15,7 @@ fun main() {
             cal.remain()
 
 
-            println("${cal.calculateString("7x8-99/9+5")}")
+            println("${cal.calculateString("(7x8)-99/(9+5)")}")
         } catch (e: NumberFormatException) {
             continue
         } catch (e: ArithmeticException) {

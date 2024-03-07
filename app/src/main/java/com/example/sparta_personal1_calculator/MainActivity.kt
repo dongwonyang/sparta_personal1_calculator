@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+import androidx.core.text.isDigitsOnly
 import org.w3c.dom.Text
 
 class MainActivity : AppCompatActivity() {
@@ -22,7 +23,7 @@ class MainActivity : AppCompatActivity() {
             val buttonText = findViewById<Button>(buttonId).text.toString()
             btn_map[buttonText] = buttonId
         }
-        val signs = listOf("add", "sub", "div", "mul", "point", "equal")
+        val signs = listOf("add", "sub", "div", "mul", "equal", "bracket1", "bracket2") // point 미구현
 
         for (i in signs) {
             val buttonId = resources.getIdentifier("btn_calculator_$i", "id", packageName)
@@ -32,16 +33,24 @@ class MainActivity : AppCompatActivity() {
 
         val cal = Calculator()
         for((key, value) in btn_map.entries){
-            if(key != "=") {
-                findViewById<Button>(value).setOnClickListener {
-                    tv_input.text = tv_input.text.toString() + key
-                }
-            } else if(key == "="){
+            if(key == "="){
                 findViewById<Button>(value).setOnClickListener{
                     tv_result.text = cal.calculateString(tv_input.text.toString()).toString()
                     tv_input.text = ""
                 }
+            } else if(key.isDigitsOnly() || key == "(" || key == ")") {
+                findViewById<Button>(value).setOnClickListener {
+                    tv_input.text = tv_input.text.toString() + key
+                }
+            } else{
+                findViewById<Button>(value).setOnClickListener {
+                    var controlChar = tv_input.text.toString()[tv_input.text.toString().length-1]
+                    if(controlChar.isDigit() || controlChar=='(' || controlChar==')') {
+                        tv_input.text = tv_input.text.toString() + key
+                    }
+                }
             }
+
         }
 
     }

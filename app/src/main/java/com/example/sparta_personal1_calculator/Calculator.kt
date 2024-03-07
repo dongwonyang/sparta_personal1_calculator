@@ -54,11 +54,16 @@ class Calculator {
         println("num1: ${num1}, num2:${num2}")
     }
 
-    fun calculateString(s: String): Int {
-        signs = s.filter { it -> !it.isDigit() }.toMutableList()
+    fun calculateString(s: String): Int? {
+        inputString = s
+        calculateBracket()
+        inputString.replace("(", "")
+        inputString.replace(")", "")
+
+        signs = inputString.filter { it -> !it.isDigit() }.toMutableList()
         nums = mutableListOf<Int>()
         var tempString = ""
-        for (i in s) {
+        for (i in inputString) {
             if (i.isDigit()) {
                 tempString += i
             } else if (tempString.isNotEmpty()) {
@@ -70,11 +75,11 @@ class Calculator {
             nums.add(tempString.toInt())
         }
 
+        if(nums.size -1 != signs.size) return 0
         calculateStringPriority()
 
         return if (nums.size == 1) nums[0] else 0
     }
-
 
     private fun calculateStringPriority() {
         var signsPriority = signs.map { it ->
@@ -142,6 +147,18 @@ class Calculator {
         return result
     }
 
+    fun calculateBracket(){
+        val cal = Calculator()
+        while(true) {
+            val startIndex = inputString.indexOf('(')
+            val endIndex = inputString.indexOf(')')
+            if (startIndex == -1 || endIndex == -1) break
+
+            var bracketModify = cal.calculateString(inputString.substring(startIndex + 1, endIndex)).toString()
+            inputString = inputString.substring(0, startIndex) + bracketModify + inputString.substring(endIndex+1, inputString.length)
+        }
+
+    }
 }
 
 
